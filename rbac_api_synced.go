@@ -125,8 +125,9 @@ func (e *SyncedEnforcer) DeletePermissionsForUser(user string) (bool, error) {
 
 // GetPermissionsForUser gets permissions for a user or role.
 func (e *SyncedEnforcer) GetPermissionsForUser(user string, domain ...string) ([][]string, error) {
-	e.m.RLock()
-	defer e.m.RUnlock()
+	// workaround issue https://github.com/casbin/casbin/issues/1514
+	e.m.Lock()
+	defer e.m.Unlock()
 	return e.Enforcer.GetPermissionsForUser(user, domain...)
 }
 
